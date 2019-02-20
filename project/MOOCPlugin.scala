@@ -22,4 +22,8 @@ object MOOCPlugin extends AutoPlugin {
     // In case we want to use an sbt-dotty version before it's fully released
     resolvers += Resolver.sonatypeRepo("staging")
   )
+
+  override val projectSettings: Seq[Def.Setting[_]] = Seq(
+    parallelExecution in Test := false
+  )
 }
