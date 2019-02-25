@@ -8,7 +8,7 @@ object LineOfSightRunner {
     Key.exec.minWarmupRuns -> 40,
     Key.exec.maxWarmupRuns -> 80,
     Key.exec.benchRuns -> 100,
-    Key.verbose -> true
+    Key.verbose -> false
   ) withWarmer(new Warmer.Default)
 
   def main(args: Array[String]): Unit = {

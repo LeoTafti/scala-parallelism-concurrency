@@ -12,7 +12,7 @@ object ParallelCountChangeRunner {
     Key.exec.minWarmupRuns -> 20,
     Key.exec.maxWarmupRuns -> 40,
     Key.exec.benchRuns -> 80,
-    Key.verbose -> true
+    Key.verbose -> false
   ) withWarmer(new Warmer.Default)
 
   def main(args: Array[String]): Unit = {
@@ -24,17 +24,23 @@ object ParallelCountChangeRunner {
     println(s"sequential result = $seqResult")
     println(s"sequential count time: $seqtime")
 
-    def measureParallelCountChange(threshold: ParallelCountChange.Threshold): Unit = {
+    def measureParallelCountChange(threshold: => ParallelCountChange.Threshold): Unit = try {
       val fjtime = standardConfig measure {
         parResult = ParallelCountChange.parCountChange(amount, coins, threshold)
       }
       println(s"parallel result = $parResult")
       println(s"parallel count time: $fjtime")
       println(s"speedup: ${seqtime.value / fjtime.value}")
+    } catch {
+      case e: NotImplementedError =>
+        println("Not implemented.")
     }
 
+    println("\n# Using moneyThreshold\n")
     measureParallelCountChange(ParallelCountChange.moneyThreshold(amount))
+    println("\n# Using totalCoinsThreshold\n")
     measureParallelCountChange(ParallelCountChange.totalCoinsThreshold(coins.length))
+    println("\n# Using combinedThreshold\n")
     measureParallelCountChange(ParallelCountChange.combinedThreshold(amount, coins))
   }
 }
