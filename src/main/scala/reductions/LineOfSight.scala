@@ -122,7 +122,7 @@ object LineOfSight {
   def parLineOfSight(input: Array[Float], output: Array[Float],
     threshold: Int): Unit = {
     val t = upsweep(input, 0, input.length, threshold)
-    downsweep(input, output, 0, t)
+    downsweep(input, output, 1, t)
     output(0) = 0;
   }
 }
