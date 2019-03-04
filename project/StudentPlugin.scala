@@ -57,6 +57,7 @@ object StudentPlugin extends AutoPlugin {
     */
 
   val packageSourcesOnly = TaskKey[File]("packageSourcesOnly", "Package the sources of the project")
+  val packageBinWithoutResources = TaskKey[File]("packageBinWithoutResources", "Like packageBin, but without the resources")
 
   val packageSubmissionZip = TaskKey[File]("packageSubmissionZip")
 
@@ -64,18 +65,21 @@ object StudentPlugin extends AutoPlugin {
     packageSubmissionZip := {
       val submission = crossTarget.value / "submission.zip"
       val sources = (packageSourcesOnly in Compile).value
-      val binaries = (packageBin in Compile).value
+      val binaries = (packageBinWithoutResources in Compile).value
       IO.zip(Seq(sources -> "sources.zip", binaries -> "binaries.jar"), submission)
       submission
     },
-    // Exclude resources from binaries
-    mappings in (Compile, packageBin) := {
+    artifactClassifier in packageSourcesOnly := Some("sources"),
+    artifact in (Compile, packageBinWithoutResources) ~= (art => art.withName(art.name + "-without-resources"))
+  ) ++
+  inConfig(Compile)(
+    Defaults.packageTaskSettings(packageSourcesOnly, Defaults.sourceMappings) ++
+    Defaults.packageTaskSettings(packageBinWithoutResources, Def.task {
       val relativePaths =
         (unmanagedResources in Compile).value.flatMap(Path.relativeTo((unmanagedResourceDirectories in Compile).value)(_))
       (mappings in (Compile, packageBin)).value.filterNot { case (_, path) => relativePaths.contains(path) }
-    },
-    artifactClassifier in packageSourcesOnly := Some("sources")
-  ) ++ inConfig(Compile)(Defaults.packageTaskSettings(packageSourcesOnly, Defaults.sourceMappings))
+    })
+  )
 
   val maxSubmitFileSize = {
     val mb = 1024 * 1024

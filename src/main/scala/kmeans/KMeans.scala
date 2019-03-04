@@ -91,7 +91,7 @@ object KMeansRunner {
     Key.exec.minWarmupRuns -> 20,
     Key.exec.maxWarmupRuns -> 40,
     Key.exec.benchRuns -> 25,
-    Key.verbose -> true
+    Key.verbose -> false
   ) withWarmer(new Warmer.Default)
 
   def main(args: Array[String]): Unit = {

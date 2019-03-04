@@ -1,8 +1,6 @@
 package kmeans
 package fun
 
-import scala.util.Properties
-
 import java.awt._
 import java.awt.event._
 import java.awt.image._
@@ -28,8 +26,12 @@ class PhotoCanvas extends JComponent {
   }
 
   private def loadEPFLImage(): Img = {
-    val sep = File.separator
-    loadFileImage(s"${Properties.userDir}${sep}src${sep}main${sep}resources${sep}kmeans${sep}epfl-view.jpg")
+    val stream = this.getClass.getResourceAsStream("/kmeans/epfl-view.jpg")
+    try {
+      loadImage(stream)
+    } finally {
+      stream.close()
+    }
   }
 
   private def loadFileImage(path: String): Img = {
