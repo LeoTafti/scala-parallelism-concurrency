@@ -60,8 +60,7 @@ object LineOfSight {
     var maxSoFar = input(from);
     var i = from + 1
     while(i < until){
-      val tanOfAngle = input(i) / i;
-      if(tanOfAngle > maxSoFar) maxSoFar = tanOfAngle;
+      maxSoFar = math.max(maxSoFar, input(i) / i)
       i = i + 1
     }
     maxSoFar
@@ -78,7 +77,7 @@ object LineOfSight {
   def upsweep(input: Array[Float], from: Int, end: Int, threshold: Int): Tree = {
     if(end-from <= threshold) Leaf(from, end, upsweepSequential(input, from, end))
     else {
-      val mid = from + (end - from) / 2
+      val mid = (from + end) / 2
       val (lt, rt) = parallel(
         upsweep(input, from, mid, threshold),
         upsweep(input, mid, end, threshold)
@@ -123,6 +122,6 @@ object LineOfSight {
     threshold: Int): Unit = {
     val t = upsweep(input, 1, input.length, threshold)
     downsweep(input, output, 0, t)
-    output(0) = 0;
+    //output(0) = 0;
   }
 }
