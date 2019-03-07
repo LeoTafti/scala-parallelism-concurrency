@@ -12,8 +12,8 @@ import KM._
 class KMeansSuite {
 
   def checkClassify(points: GenSeq[Point], means: GenSeq[Point], expected: GenMap[Point, GenSeq[Point]]): Unit = {
-    assert(classify(points, means) == expected,
-      s"classify($points, $means) should equal to $expected")
+    classify(points, means)
+    assertEquals(expected, classify(points, means))
   }
 
   @Test def `'classify should work for empty 'points' and empty 'means'`: Unit = {

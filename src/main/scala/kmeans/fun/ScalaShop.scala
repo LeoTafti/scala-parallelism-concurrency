@@ -7,6 +7,7 @@ import javax.swing._
 import javax.swing.event._
 import scala.collection.mutable.ArrayBuffer
 import scala.reflect.ClassTag
+import org.scalameter._
 
 object ScalaShop {
 
@@ -105,11 +106,10 @@ object ScalaShop {
     stepbutton.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent): Unit = {
         var status = ""
-        val time = .1
-        //  = measure {
-        //   status = canvas.applyIndexedColors(getColorCount, getInitialSelectionStrategy, getConvergenceStragegy)
-        // }
-        updateInformationBox(status, time)
+        val time = measure {
+          status = canvas.applyIndexedColors(getColorCount, getInitialSelectionStrategy, getConvergenceStragegy)
+        }
+        updateInformationBox(status, time.value)
       }
     })
     actionControls.add(stepbutton)
@@ -180,7 +180,7 @@ object ScalaShop {
     setVisible(true)
 
     def updateInformationBox(status: String, time: Double): Unit = {
-      info.setText(s"$status\nTime: ${time.toInt} ms.")
+      info.setText(s"$status\nTime: $time")
     }
 
     def getColorCount: Int =
