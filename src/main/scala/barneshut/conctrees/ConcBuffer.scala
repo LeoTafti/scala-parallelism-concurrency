@@ -2,6 +2,7 @@ package barneshut
 package conctrees
 
 import scala.reflect.ClassTag
+import org.scalameter._
 
 class ConcBuffer[@specialized(Byte, Char, Int, Long, Float, Double) T: ClassTag](
   val k: Int, private var conc: Conc[T]
@@ -61,32 +62,32 @@ class ConcBuffer[@specialized(Byte, Char, Int, Long, Float, Double) T: ClassTag]
 
 object ConcBufferRunner {
 
-  // val standardConfig = config(
-  //   Key.exec.minWarmupRuns -> 20,
-  //   Key.exec.maxWarmupRuns -> 40,
-  //   Key.exec.benchRuns -> 60,
-  //   Key.verbose -> false
-  // ) withWarmer(new Warmer.Default)
+  val standardConfig = config(
+    Key.exec.minWarmupRuns -> 20,
+    Key.exec.maxWarmupRuns -> 40,
+    Key.exec.benchRuns -> 60,
+    Key.verbose -> false
+  ).withWarmer(new Warmer.Default)
 
   def main(args: Array[String]): Unit = {
-    // val size = 1000000
+    val size = 1000000
 
-    // def run(p: Int): Unit = {
-    //   val taskSupport = new collection.parallel.ForkJoinTaskSupport(
-    //     new java.util.concurrent.ForkJoinPool(p))
-    //   val strings = (0 until size).map(_.toString)
-    //   val time = standardConfig measure {
-    //     val parallelized = strings.par
-    //     parallelized.tasksupport = taskSupport
-    //     parallelized.aggregate(new ConcBuffer[String])(_ += _, _ combine _).result
-    //   }
-    //   println(s"p = $p, time = $time ms")
-    // }
+    def run(p: Int): Unit = {
+      val taskSupport = new collection.parallel.ForkJoinTaskSupport(
+        new java.util.concurrent.ForkJoinPool(p))
+      val strings = (0 until size).map(_.toString)
+      val time = standardConfig measure {
+        val parallelized = strings.par
+        parallelized.tasksupport = taskSupport
+        parallelized.aggregate(new ConcBuffer[String])(_ += _, _ combine _).result
+      }
+      println(s"p = $p, time = ${time.value}")
+    }
 
-    // run(1)
-    // run(2)
-    // run(4)
-    // run(8)
+    run(1)
+    run(2)
+    run(4)
+    run(8)
   }
 
 }

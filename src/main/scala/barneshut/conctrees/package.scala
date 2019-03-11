@@ -1,5 +1,7 @@
 package barneshut
 
+import org.scalameter._
+
 package object conctrees {
 
   implicit class ConcOps[T](val self: Conc[T]) extends AnyVal {
@@ -7,4 +9,8 @@ package object conctrees {
     def <>(that: Conc[T]) = Conc.concatTop(self.normalized, that.normalized)
   }
 
+  // Workaround Dotty's handling of the existential type KeyValue
+  implicit def keyValueCoerce[T](kv: (Key[T], T)): KeyValue = {
+    kv.asInstanceOf[KeyValue]
+  }
 }
