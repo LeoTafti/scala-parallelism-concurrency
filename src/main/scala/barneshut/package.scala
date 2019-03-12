@@ -99,11 +99,12 @@ package object barneshut {
 
         val newSize = size/2
 
-        Fork(
+        val fork = Fork(
           Empty(wCorr, nCorr, newSize),
           Empty(eCorr, nCorr, newSize),
           Empty(wCorr, sCorr, newSize),
-          Empty(eCorr, sCorr, newSize)).insert(b)
+          Empty(eCorr, sCorr, newSize))
+        (bodies :+ b).foldLeft(fork)((f, b) => f.insert(b))
       }
       else {
         Leaf(centerX, centerY, size, bodies :+ b)
