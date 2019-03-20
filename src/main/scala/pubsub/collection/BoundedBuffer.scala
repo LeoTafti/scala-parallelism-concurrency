@@ -24,7 +24,7 @@ class BoundedBuffer[T](size: Int) extends AbstractBoundedBuffer[T](size) {
   def isFull : Boolean = count == size
   def tailIndex : Int = {
     val diff = head - count
-    if(diff > 0) diff
+    if(diff >= 0) diff
     else diff + size
   }
   def nextHeadIndex : Int = (head + 1) % size
