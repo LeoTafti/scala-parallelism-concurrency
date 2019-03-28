@@ -13,19 +13,18 @@ class SortedList extends AbstractSortedList {
   // Finds the first node whose value satisfies the predicate.
   // Returns the predecessor of the node and the node.
   def findNodeWithPrev(pred: Int => Boolean): (Node, Option[Node]) = {
-    def findRec(startFrom : Node) : (Node, Option[Node]) = {
-      startFrom.next match {
-        case None => (startFrom, None)
-        case Some(nextNode) =>
-          if(nextNode.deleted){
-            startFrom.atomicState.compareAndSet((Some(nextNode), false), (nextNode.next, false))
+    def findRec(prev : Node, curr : Option[Node]) : (Node, Option[Node]) = {
+      (prev, curr) match {
+        case (last, None) => (last, None);
+        case (_, Some(node)) =>
+          if(node.deleted) {
+            prev.atomicState.compareAndSet((curr, false), (node.next, false))
             findNodeWithPrev(pred)
-          }
-          else if(pred(nextNode.value)) (startFrom, Some(nextNode))
-          else findRec(nextNode)
+          }else if(pred(node.value)) (prev, curr)
+          else findRec(node, node.next)
       }
     }
-    findRec(_head)
+    findRec(_head, _head.next)
   }
 
   // Insert an element in the list.

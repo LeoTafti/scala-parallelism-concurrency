@@ -3,7 +3,7 @@ package lockfree
 abstract class Node(val value: Int, initTail: Option[Node]) {
 
   // The type of mutable state held by node.
-  type State = (Option[Node], Boolean)
+  type State = (Option[Node], Boolean) //Boolean flag indicates whether THIS has been deleted or not !! not next
 
   // The initial mutable state of the node.
   def initialState: State = (initTail, false);
