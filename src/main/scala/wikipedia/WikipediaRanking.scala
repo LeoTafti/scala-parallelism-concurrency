@@ -26,7 +26,7 @@ object WikipediaRanking {
   //val wikiRdd: RDD[WikipediaArticle] = sc.parallelize(WikipediaData.lines map (WikipediaData.parse))
   //TODO : Which one do I use ? Do I parallelize before of after parsing ?
   //If I parallelize after, it's potentially faster but LAZY (probably need a persist() call)
-  val wikiRdd : RDD[WikipediaArticle] = sc.parallelize(WikipediaData.lines).map(WikipediaData.parse).persist();
+  val wikiRdd : RDD[WikipediaArticle] = sc.parallelize(WikipediaData.lines).map(WikipediaData.parse);
   
   /** Returns the number of articles on which the language `lang` occurs.
    *  Hint1: consider using method `aggregate` on RDD[T].
