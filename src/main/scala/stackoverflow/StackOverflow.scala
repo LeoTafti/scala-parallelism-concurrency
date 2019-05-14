@@ -183,8 +183,8 @@ class StackOverflow extends Serializable {
                  |  * desired distance: $kmeansEta
                  |  * means:""".stripMargin)
       for (idx <- 0 until kmeansKernels)
-      println(f"   ${means(idx).toString}%20s ==> ${newMeans(idx).toString}%20s  " +
-              f"  distance: ${euclideanDistance(means(idx), newMeans(idx))}%8.0f")
+      println("   %20s ==> %20s  ".format(means(idx).toString, newMeans(idx).toString) +
+              "  distance: %8.0f".format(euclideanDistance(means(idx), newMeans(idx))))
     }
 
     if (converged(distance))
@@ -291,6 +291,6 @@ class StackOverflow extends Serializable {
     println("  Score  Dominant language (%percent)  Questions")
     println("================================================")
     for ((lang, percent, size, score) <- results)
-      println(f"${score}%7d  ${lang}%-17s (${percent}%-5.1f%%)      ${size}%7d")
+      println("%7d  %-17s (%-5.1f%%)      %7d".format(score, lang, percent, size))
   }
 }
