@@ -27,7 +27,7 @@ object StackOverflow extends StackOverflow {
     val scored  = scoredPostings(grouped)
     //val scored = scoredPostings(grouped).sample(true, 0.1, 0);
     val vectors = vectorPostings(scored)
-    assert(vectors.count() == 2121822, "Incorrect number of vectors: " + vectors.count())
+    //assert(vectors.count() == 2121822, "Incorrect number of vectors: " + vectors.count())
 
     val means   = kmeans(sampleVectors(vectors), vectors, debug = true)
     val results = clusterResults(means, vectors)
