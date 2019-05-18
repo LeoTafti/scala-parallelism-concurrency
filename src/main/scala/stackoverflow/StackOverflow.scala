@@ -189,13 +189,15 @@ class StackOverflow extends Serializable {
     // TODO: Fill in the newMeans array
 
     //"Pairing each vector with the index of the closest mean"
-    val clusterVectorsPairs = vectors.map(v => (findClosest(v, means), v)).groupByKey
-    val nM = clusterVectorsPairs.map{case (clusterId, iter) => (clusterId, averageVectors(iter))}.collect
-    for(i <- 0 to nM.size){
-      nM(i) match {
-        case (clusterId, avg) => newMeans(clusterId) = avg
-      }
+    val clusterVectorsPairsMap = vectors.map(v => (findClosest(v, means), v)).groupByKey.collect.toMap
+    
+    for(i <- 0 until newMeans.size if clusterVectorsPairsMap.get(i).isDefined){
+      newMeans(i) = averageVectors(clusterVectorsPairsMap(i))
     }
+
+    val clustVects: Map[Int, Iterable[(Int, Int)]] = vectors.map(v => (findClosest(v, means), v)).groupByKey.collect.toMap
+
+    for (i <- newMeans.indices; if clustVects.get(i).isDefined) newMeans(i) = averageVectors(clustVects(i))
 
     val distance = euclideanDistance(means, newMeans)
 
