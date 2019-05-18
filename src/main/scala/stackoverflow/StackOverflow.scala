@@ -26,7 +26,7 @@ object StackOverflow extends StackOverflow {
     //TODO : uncomment for submission
     val scored  = scoredPostings(grouped)
     //val scored = scoredPostings(grouped).sample(true, 0.1, 0);
-    val vectors = vectorPostings(scored)
+    val vectors = vectorPostings(scored).persist()
     //assert(vectors.count() == 2121822, "Incorrect number of vectors: " + vectors.count())
 
     val means   = kmeans(sampleVectors(vectors), vectors, debug = true)
@@ -129,7 +129,7 @@ class StackOverflow extends Serializable {
       }
     }
 
-    scored.map{ case (q, hs) => (firstLangInTag(q.tags, langs).get * langSpread, hs)}
+    scored.map{ case (q, hs) => (firstLangInTag(q.tags, langs).get * langSpread, hs)}.persist()
   }
 
 
